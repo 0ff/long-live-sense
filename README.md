@@ -12,8 +12,21 @@ This repository should become a central hub to coordinate the efforts of reverse
 This API is needed to allow for the basic operation of the Sense hardware.
 We will need to implement a custom server that provides the same calls so that Sense keeps running.
 
+##### Security
+Sense uses TLSv1.2 for all connections, except for `time.hello.is`.
+All communication is encrypted with a certificate for `*.hello.is` which let's me believe that there's only one certificat in the actual Sense hardware for certificate-pinning.
+**Use of cert pinning was confirmed** using a MITM proxy, this means we are not able to simply capture the traffic between Sense and the Sense API.
+
+##### Server URLs
+On startup, Sense connects to the following servers:
+
+* `time.hello.is` (**plain http**) where it `POST`s some protobuf data and receives data in return
+* `messeji.hello.is` (TLSv1.2) this server seems to be used often, but not as often as the next one
+* `sense-in.hello.is` (TLSv1.2) this is where most of the communication seems to happen
+
 ##### Todos
-* [ ] Connect Sense via MITM Proxy to the server
+* [x] Connect Sense via MITM Proxy to the server
+* [x] Confirm whether or not Sense uses Certificate Pinning: it does :(
 * [ ] Document used Endpoints and existing responses
 * [ ] Mock API
 
